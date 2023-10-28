@@ -188,7 +188,7 @@
 				]
 			},
 			{
-				"name": "Copy data3",
+				"name": "Gender-copy",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -207,15 +207,56 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "GenderSou",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "GenderSin",
+						"type": "DatasetReference"
+					}
+				]
 			},
 			{
 				"name": "Copy data4",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Copy data3",
+						"activity": "Gender-copy",
 						"dependencyConditions": [
 							"Succeeded"
 						]
