@@ -1,0 +1,66 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "OlympicDF001"
+		},
+		"AthletesLSSin_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"MedalsLSSin_accountKey": {
+			"value": ""
+		},
+		"TeamsLSSin_accountKey": {
+			"value": ""
+		},
+		"coachesLSSin_accountKey": {
+			"value": ""
+		},
+		"genderLSSin_accountKey": {
+			"value": ""
+		},
+		"AthletesLSSin_properties_typeProperties_url": {
+			"value": "https://olympictut001.dfs.core.windows.net/"
+		},
+		"AthletesLSSou_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/darshilparmar/tokyo-olympic-azure-data-engineering-project/main/data/Athletes.csv"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://olympictut001.dfs.core.windows.net/"
+		},
+		"CoachesLSSou_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/darshilparmar/tokyo-olympic-azure-data-engineering-project/main/data/Coaches.csv"
+		},
+		"GenderLSSou_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/darshilparmar/tokyo-olympic-azure-data-engineering-project/main/data/EntriesGender.csv"
+		},
+		"MedalsLSSin_properties_typeProperties_url": {
+			"value": "https://olympictut001.dfs.core.windows.net/"
+		},
+		"MedalsLSSou_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/darshilparmar/tokyo-olympic-azure-data-engineering-project/main/data/Medals.csv"
+		},
+		"TeamsLSSin_properties_typeProperties_url": {
+			"value": "https://olympictut001.dfs.core.windows.net/"
+		},
+		"TeamsLSSou_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/darshilparmar/tokyo-olympic-azure-data-engineering-project/main/data/Teams.csv"
+		},
+		"coachesLSSin_properties_typeProperties_url": {
+			"value": "https://olympictut001.dfs.core.windows.net/"
+		},
+		"genderLSSin_properties_typeProperties_url": {
+			"value": "https://olympictut001.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
