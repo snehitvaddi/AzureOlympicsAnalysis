@@ -18,14 +18,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "26b305a6-2cf9-4432-874a-4882a321c027"
+				"spark.autotune.trackingId": "80d65c1a-f7e4-4198-bf84-c1337ab2de1c"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -41,14 +38,13 @@
 				"endpoint": "https://olympicsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SparkPool",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.3",
 				"nodeCount": 10,
 				"cores": 4,
 				"memory": 28,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -56,13 +52,13 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"athlete = spark.read.format('csv').option('header','true').load('abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/raw-data/athletes.csv')\r\n",
-					"coaches = spark.read.format('csv').option('header','true').load('abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/raw-data/coaches.csv')\r\n",
-					"gender = spark.read.format('csv').option('header','true').load('abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/raw-data/gender.csv')\r\n",
-					"medals = spark.read.format('csv').option('header','true').load('abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/raw-data/medals.csv')\r\n",
-					"teams = spark.read.format('csv').option('header','true').load('abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/raw-data/teams.csv')"
+					"athlete = spark.read.format('csv').option('header','true').load('abfss://olympicdata@olympictut001.dfs.core.windows.net/raw-data/athletes.csv')\r\n",
+					"coaches = spark.read.format('csv').option('header','true').load('abfss://olympicdata@olympictut001.dfs.core.windows.net/raw-data/coaches.csv')\r\n",
+					"gender = spark.read.format('csv').option('header','true').load('abfss://olympicdata@olympictut001.dfs.core.windows.net/raw-data/gender.csv')\r\n",
+					"medals = spark.read.format('csv').option('header','true').load('abfss://olympicdata@olympictut001.dfs.core.windows.net/raw-data/medals.csv')\r\n",
+					"teams = spark.read.format('csv').option('header','true').load('abfss://olympicdata@olympictut001.dfs.core.windows.net/raw-data/teams.csv')"
 				],
-				"execution_count": 20
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -80,7 +76,7 @@
 				"source": [
 					"teams.printSchema()"
 				],
-				"execution_count": 21
+				"execution_count": 40
 			},
 			{
 				"cell_type": "code",
@@ -99,7 +95,7 @@
 					"from pyspark.sql.functions import col\n",
 					"from pyspark.sql.types import IntegerType, DoubleType, BooleanType, DateType"
 				],
-				"execution_count": 25
+				"execution_count": 41
 			},
 			{
 				"cell_type": "code",
@@ -119,7 +115,7 @@
 					"    .withColumn(\"Male\",col(\"Male\").cast(IntegerType()))\\\n",
 					"    .withColumn(\"Total\",col(\"Total\").cast(IntegerType()))"
 				],
-				"execution_count": 26
+				"execution_count": 42
 			},
 			{
 				"cell_type": "code",
@@ -138,7 +134,7 @@
 					"medals.show()\n",
 					"medals.printSchema()"
 				],
-				"execution_count": 27
+				"execution_count": 43
 			},
 			{
 				"cell_type": "code",
@@ -160,7 +156,7 @@
 					"    .withColumn(\"Total\",col(\"Total\").cast(IntegerType()))\\\n",
 					"    .withColumn(\"Rank by Total\",col(\"Rank by Total\").cast(IntegerType()))"
 				],
-				"execution_count": 29
+				"execution_count": 44
 			},
 			{
 				"cell_type": "code",
@@ -178,7 +174,7 @@
 				"source": [
 					"top_golds = medals.orderBy(\"Gold\", ascending=False).select(\"Team_Country\").show()"
 				],
-				"execution_count": 34
+				"execution_count": 45
 			},
 			{
 				"cell_type": "code",
@@ -197,7 +193,7 @@
 					"teams.show()\n",
 					"teams.printSchema()"
 				],
-				"execution_count": 30
+				"execution_count": 46
 			},
 			{
 				"cell_type": "code",
@@ -213,9 +209,9 @@
 					}
 				},
 				"source": [
-					"athlete.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/transformed-data/athlete.csv\")"
+					"athlete.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://olympicdata@olympictut001.dfs.core.windows.net/transformed-data/athlete\")"
 				],
-				"execution_count": 36
+				"execution_count": 47
 			},
 			{
 				"cell_type": "code",
@@ -231,12 +227,12 @@
 					}
 				},
 				"source": [
-					"coaches.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/transformed-data/coaches.csv\")\n",
-					"gender.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/transformed-data/gender.csv\")\n",
-					"medals.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/transformed-data/medals.csv\")\n",
-					"teams.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/transformed-data/teams.csv\")"
+					"coaches.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://olympicdata@olympictut001.dfs.core.windows.net/transformed-data/coaches\")\n",
+					"gender.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://olympicdata@olympictut001.dfs.core.windows.net/transformed-data/gender\")\n",
+					"medals.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://olympicdata@olympictut001.dfs.core.windows.net/transformed-data/medals\")\n",
+					"teams.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://olympicdata@olympictut001.dfs.core.windows.net/transformed-data/teams\")"
 				],
-				"execution_count": 37
+				"execution_count": 48
 			},
 			{
 				"cell_type": "code",
@@ -253,7 +249,8 @@
 				},
 				"source": [
 					""
-				]
+				],
+				"execution_count": null
 			}
 		]
 	}
