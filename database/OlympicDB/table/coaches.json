@@ -1,7 +1,7 @@
 {
-	"name": "athlete",
+	"name": "coaches",
 	"properties": {
-		"Name": "athlete",
+		"Name": "coaches",
 		"EntityType": "TABLE",
 		"Namespace": {
 			"DatabaseName": "OlympicDB"
@@ -14,7 +14,7 @@
 		"StorageDescriptor": {
 			"Columns": [
 				{
-					"Name": "PersonName",
+					"Name": "Name",
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
@@ -51,6 +51,19 @@
 						}
 					},
 					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "Event",
+					"OriginDataTypeName": {
+						"TypeName": "string",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Length": 8000,
+						"Properties": {
+							"HIVE_TYPE_STRING": "string"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
 				}
 			],
 			"Format": {
@@ -59,7 +72,7 @@
 				"FormatType": "csv",
 				"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
 				"Properties": {
-					"path": "abfss://olympicdata@olympictut001.dfs.core.windows.net/transformed-data/athlete/part-00000-f3149c97-addd-48ba-956a-b06a89ea946d-c000.csv",
+					"path": "abfss://olympicdata@olympictut001.dfs.core.windows.net/transformed-data/coaches/part-00000-d465c661-ce19-4578-be93-22930927efc7-c000.csv",
 					"delimiter": ",",
 					"multiLine": "false",
 					"firstRowAsHeader": "true",
@@ -70,7 +83,7 @@
 			},
 			"Source": {
 				"Provider": "ADLS",
-				"Location": "abfss://olympicdata@olympictut001.dfs.core.windows.net/transformed-data/athlete/part-00000-f3149c97-addd-48ba-956a-b06a89ea946d-c000.csv",
+				"Location": "abfss://olympicdata@olympictut001.dfs.core.windows.net/transformed-data/coaches/part-00000-d465c661-ce19-4578-be93-22930927efc7-c000.csv",
 				"Properties": {
 					"LinkedServiceName": "olympicsynapse-WorkspaceDefaultStorage",
 					"LocationSetToDatabaseDefault": false
@@ -78,7 +91,7 @@
 			},
 			"Properties": {
 				"textinputformat.record.delimiter": ",",
-				"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+				"compression": "",
 				"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 			},
 			"Compressed": false,
