@@ -1,0 +1,260 @@
+{
+	"name": "Notebook 1",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "SparkPool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "26b305a6-2cf9-4432-874a-4882a321c027"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8056c1e0-0c24-487e-afcd-8eb3f02b8145/resourceGroups/AzureOlympicRG001/providers/Microsoft.Synapse/workspaces/olympicsynapse/bigDataPools/SparkPool",
+				"name": "SparkPool",
+				"type": "Spark",
+				"endpoint": "https://olympicsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SparkPool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"athlete = spark.read.format('csv').option('header','true').load('abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/raw-data/athletes.csv')\r\n",
+					"coaches = spark.read.format('csv').option('header','true').load('abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/raw-data/coaches.csv')\r\n",
+					"gender = spark.read.format('csv').option('header','true').load('abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/raw-data/gender.csv')\r\n",
+					"medals = spark.read.format('csv').option('header','true').load('abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/raw-data/medals.csv')\r\n",
+					"teams = spark.read.format('csv').option('header','true').load('abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/raw-data/teams.csv')"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"teams.printSchema()"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import col\n",
+					"from pyspark.sql.types import IntegerType, DoubleType, BooleanType, DateType"
+				],
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"gender = gender.withColumn(\"Female\", col(\"Female\").cast(IntegerType()))\\\n",
+					"    .withColumn(\"Male\",col(\"Male\").cast(IntegerType()))\\\n",
+					"    .withColumn(\"Total\",col(\"Total\").cast(IntegerType()))"
+				],
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"medals.show()\n",
+					"medals.printSchema()"
+				],
+				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"medals = medals.withColumn(\"Gold\", col(\"Gold\").cast(IntegerType()))\\\n",
+					"    .withColumn(\"Silver\",col(\"Silver\").cast(IntegerType()))\\\n",
+					"    .withColumn(\"Bronze\",col(\"Bronze\").cast(IntegerType()))\\\n",
+					"    .withColumn(\"Total\",col(\"Total\").cast(IntegerType()))\\\n",
+					"    .withColumn(\"Rank by Total\",col(\"Rank by Total\").cast(IntegerType()))"
+				],
+				"execution_count": 29
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"top_golds = medals.orderBy(\"Gold\", ascending=False).select(\"Team_Country\").show()"
+				],
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"teams.show()\n",
+					"teams.printSchema()"
+				],
+				"execution_count": 30
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"athlete.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/transformed-data/athlete.csv\")"
+				],
+				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"coaches.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/transformed-data/coaches.csv\")\n",
+					"gender.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/transformed-data/gender.csv\")\n",
+					"medals.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/transformed-data/medals.csv\")\n",
+					"teams.write.format('csv').option(\"header\",\"true\").mode(\"overwrite\").save(\"abfss://<your Container>@<Your Storage Acc Name>.dfs.core.windows.net/transformed-data/teams.csv\")"
+				],
+				"execution_count": 37
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				]
+			}
+		]
+	}
+}
